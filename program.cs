@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Лаба_13
 {
@@ -11,22 +7,26 @@ namespace Лаба_13
     {
         public string Name { get; set; }
 
-        public abstract void Move();
-
-        // Конструктор класса Животное
         public Animal(string name)
         {
             Name = name;
         }
 
-        // Деструктор класса Животное
+        public abstract void Move();
+
+        // Общий метод вывода информации
+        public virtual void ShowInfo()
+        {
+            Console.WriteLine($"Name: {Name}");
+        }
+
         ~Animal()
         {
             Console.WriteLine($"Объект {Name} класса Animal уничтожен.");
         }
     }
 
-    // Абстрактный Класс Рыба, наследуется от Животное
+    // Рыба
     abstract class Fish : Animal
     {
         public Fish(string name) : base(name) { }
@@ -34,7 +34,7 @@ namespace Лаба_13
         public abstract void Dive();
     }
 
-    // Абстрактный Класс Птица, наследуется от Животное
+    // Птица
     abstract class Bird : Animal
     {
         public Bird(string name) : base(name) { }
@@ -42,27 +42,7 @@ namespace Лаба_13
         public abstract void Rise();
     }
 
-    // Класс Дельфин, наследуется от Животное
-    class Dolphin : Animal
-    {
-        public Dolphin(string name) : base(name) { }
-
-        public override void Move()
-        {
-            Console.WriteLine($"{Name} says: I'm swimming");
-        }
-    }
-
-    // Класс Пингвин, наследуется от Животное
-    class Pinguin : Animal
-    {
-        public Pinguin(string name) : base(name) { }
-
-        public override void Move()
-        {
-            Console.WriteLine($"{Name} says: I'm swimming and walking");
-        }
-    }
+    // Млекопитающие
     abstract class Mammals : Animal
     {
         public Mammals(string name) : base(name) { }
@@ -70,19 +50,51 @@ namespace Лаба_13
         public abstract void Jump();
     }
 
-    // Пример класса, реализующего интерфейс IDisposable, для демонстрации деструктора
-    class ExampleDisposable : IDisposable
+    // Дельфин
+    class Dolphin : Mammals
     {
-        public ExampleDisposable()
+        public Dolphin(string name) : base(name) { }
+
+        public override void Move()
         {
-            Console.WriteLine("Создан объект ExampleDisposable.");
-            Console.ReadLine();
+            Console.WriteLine($"{Name} says: I'm swimming");
         }
 
-        public void Dispose()
+        public override void Jump()
         {
-            Console.ReadLine();
-            Console.WriteLine("Вызван метод Dispose объекта ExampleDisposable.");
+            Console.WriteLine($"{Name} jump out of the water.");
+        }
+
+        public override void ShowInfo()
+        {
+            Console.WriteLine("Dolphin:");
+            base.ShowInfo();
+            Move();
+            Jump();
+        }
+    }
+
+    // Пингвин
+    class Penguin : Bird
+    {
+        public Penguin(string name) : base(name) { }
+
+        public override void Move()
+        {
+            Console.WriteLine($"{Name} says: I'm swimming and walking");
+        }
+
+        public override void Rise()
+        {
+            Console.WriteLine($"{Name} can not fly.");
+        }
+
+        public override void ShowInfo()
+        {
+            Console.WriteLine("Penguin:");
+            base.ShowInfo();
+            Move();
+            Rise();
         }
     }
 
@@ -90,19 +102,16 @@ namespace Лаба_13
     {
         static void Main(string[] args)
         {
-            Animal[] animals = new Animal[3];
-
-            animals[0] = new Dolphin("Теранс");
-            animals[1] = new Pinguin("Ковальски");
-
-            // Создание объекта ExampleDisposable для демонстрации деструктора
-            using (var exampleDisposable = new ExampleDisposable())
+            Animal[] animals = new Animal[]
             {
-                animals[2] = new Pinguin("Шкипер");
-                foreach (var animal in animals)
-                {
-                    animal.Move();
-                }
+                new Dolphin("Теренс"),
+                new Penguin("Ковальски")
+            };
+
+            foreach (var animal in animals)
+            {
+                animal.ShowInfo();
+                Console.WriteLine();
             }
 
             Console.ReadLine();
